@@ -1,3 +1,10 @@
+// add presentation grade
+// getline for the name
+// fix delete function 
+// fix retrieve
+// 
+
+
 #include<iostream>
 #include<list>
 #include<fstream>
