@@ -1,8 +1,6 @@
 // add presentation grade
-// getline for the name
 // fix delete function 
 // fix retrieve
-// 
 
 
 #include<iostream>
@@ -170,14 +168,14 @@ void updateStudentData(ClassRoll student[100], int limit)
 // Adding a student
 void addStudent(ClassRoll student[], int &limit)
 {
-
 	string name;
-	cout << "First Name: ";
-	cin >> name;
+	cout << "Full Name: ";
+	cin.ignore();
+	getline(cin, name);
 	if (name.length() > 40)
 	{
 		cerr << "Error: The name you entered must not exceed 40 characters!" << endl;
-		cout << endl;
+			cout << endl;
 		return;
 	}
 	student[a].name = name;
@@ -264,12 +262,17 @@ void deleteStudent(ClassRoll student[100], int limit)
 void saveStudentData(ClassRoll students[], int limit)
 {
 	ofstream myfile;
-	myfile.open("StudentRecord.txt", ios::out);
+	myfile.open("StudentRecord.txt", ios::ios_base::app);
 
 	for (int x = 0; x <= a; x++)
 	{
-		myfile << students[x].name << " " << students[x].usfID << " " << students[x].usfEmail << " "
-			<< students[x].grade_Essay1 << " " << students[x].grade_Essay2 << " "
+		if (students[x].grade_Essay1 > 4 || students[x].grade_Essay1 < 0) {
+			break;
+		}
+		myfile << students[x].name << " " << students[x].usfID << " " <<
+			students[x].usfEmail << " "
+			<< students[x].grade_Essay1 << " " << students[x].grade_Essay2
+			<< " "
 			<< students[x].grade_termProject << endl;
 	}
 	myfile.close();
@@ -337,3 +340,4 @@ int main(int argc, char **argv)
 	getchar();
 	return 0;
 }
+
