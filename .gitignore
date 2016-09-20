@@ -1,8 +1,4 @@
-// add presentation grade
-// fix delete function 
-// fix retrieve
-
-
+#include <vector>
 #include<iostream>
 #include<list>
 #include<fstream>
@@ -20,11 +16,13 @@ int a;
 struct ClassRoll
 {
 	string name, usfID, usfEmail;
-	int grade_Essay1, grade_Essay2, grade_termProject;
+	string grade_Essay1, grade_Essay2, grade_termProject;
 	bool compare(ClassRoll valid)
 	{
-		if (name == valid.name && usfID == valid.usfID && usfEmail == valid.usfEmail
-			&& grade_Essay1 == valid.grade_Essay1 && grade_Essay2 == valid.grade_Essay2
+		if (name == valid.name && usfID == valid.usfID && usfEmail ==
+			valid.usfEmail
+			&& grade_Essay1 == valid.grade_Essay1 && grade_Essay2 ==
+			valid.grade_Essay2
 			&& grade_termProject == valid.grade_termProject)
 		{
 			return true;
@@ -36,35 +34,83 @@ struct ClassRoll
 	}
 };
 
-void readStudentData(ClassRoll student[50], int &limit)
+void readStudentData(vector <ClassRoll> & studentVector, int &limit)
 {
+
 	// Define string variables.
 	ClassRoll stud;
 	int check = 0;
 	string name, ID, email;
-	int g1, g2, g3;
-	ifstream myfile; // Pre-pare opening of file.
-	char fileName[20] = "StudentRecord.txt";
+	string g1, g2, g3;
+	ifstream myfile("StudentRecord.txt"); // Pre-pare opening of file.
+
+	int i = 0;
+
+	string studentLine;
+	while (getline(myfile, studentLine)) {
+
+		stringstream ss(studentLine);
+
+		string token;
+
+		while (getline(ss, token, ',')) {
+			cout << token << endl;
+
+			switch (i % 6) {
+
+			case 1: stud.name = token;
+
+			case 2: stud.usfID = token;
+
+			case 3: stud.usfEmail = token;
+
+			case 4: stud.grade_Essay1 = token;
+
+			case 5: stud.grade_Essay2 = token;
+
+			case 6: stud.grade_termProject = token;
+			}
+			i++;
+
+		}
+		studentVector.push_back(stud);
+
+
+	}
+	//cin >> g1;
+
+
+	/*char fileName[20] = "StudentRecord.txt";
 	myfile.open(fileName); // Open file
 	if (!myfile) // Validation
 	{
-		cout << "Can't open input file " << endl; // can not open file
-		exit(1); // End program.
+	cout << "Can't open input file " << endl; // can not open file
+	exit(1); // End program.
 	}
-	for (int i = 0; i <= check; i++)  //display up to check
+	*/
+	/*for (int i = 0; i <= check; i++) //display up to check
 	{
-		myfile >> name >> email >> ID >> g1 >> g2 >> g3; // call to variables
+	myfile >> name >> email >> ID >> g1 >> g2 >> g3; // call to
+	variables
 	}
+	*/
+
+
+
+
 
 	// Take variable from struct
-	stud.name = name;   // Name
-	stud.usfID = ID;      // ID
-	stud.usfEmail = email;  //email
-	stud.grade_Essay1 = g1;
-	stud.grade_Essay2 = g2;
-	stud.grade_termProject = g3;
-	myfile.close();    // Close file
-	check++;        // Add 1 to check
+	//stud.name = name; // Name
+	//stud.usfID = ID; // ID
+	//stud.usfEmail = email; //email
+	//stud.grade_Essay1 = g1;
+	//stud.grade_Essay2 = g2;
+	//stud.grade_termProject = g3;
+
+	cout << stud.name << stud.usfID << stud.usfEmail << stud.grade_Essay1
+		<< stud.grade_Essay2 << stud.grade_termProject << endl;
+	myfile.close(); // Close file
+	check++; // Add 1 to check
 }
 
 void displayClassRoll(ClassRoll display) //display function
@@ -80,36 +126,44 @@ void displayClassRoll(ClassRoll display) //display function
 	cout << "Term Project Grade: " << display.grade_termProject << endl;
 }
 
-void getRecord(ClassRoll student[100], int &limit) //displays one student record
+void getRecord(vector <ClassRoll> & studentVector, int &limit) //displays
+one student record
 {
 	string info;
 	cout << "Please enter a students ID : ";
-	for (int count = 0; count <= 100; count++)
+	//cout << studentVector.size();
+	cin >> info;
+	for (int count = 0; count < studentVector.size(); count++)
 	{
-		if (student[count].usfID.compare(info) == 0)
+		//cout << "wtf";
+		//cout << studentVector[count].usfID;
+		if (studentVector[count].usfID == info)
 		{
 			cout << "We have found the student" << endl;
-			cout << "Name: " << student[count].name << endl;
-			cout << "ID: " << student[count].usfID << endl;
-			cout << "Email: " << student[count].usfEmail << endl;
-			cout << "Grade 1: " << student[count].grade_Essay1 << endl;
-			cout << "Grade 2: " << student[count].grade_Essay2 << endl;
-			cout << "Term Project Grade: " << student[count].grade_termProject << endl;
+			cout << "Name: " << studentVector[count].name << endl;
+			cout << "ID: " << studentVector[count].usfID << endl;
+			cout << "Email: " << studentVector[count].usfEmail << endl;
+			cout << "Grade 1: " << studentVector[count].grade_Essay1 <<
+				endl;
+			cout << "Grade 2: " << studentVector[count].grade_Essay2 <<
+				endl;
+			cout << "Term Project Grade: " <<
+				studentVector[count].grade_termProject << endl;
 		}
 	}
 }
 
-void updateStudentData(ClassRoll student[100], int limit)
+void updateStudentData(vector <ClassRoll> & studentVector, int limit)
 {
 	int change1, change2, change3, change4, change5, change6;
 	char newname, newid, newemail;
-	int newgrade1, newgrade2, newgrade3;
+	string newgrade1, newgrade2, newgrade3;
 	string info;
 	cout << "Please enter a students ID : ";
 	cin >> info;
-	for (int count = 0; count <= 100; count++)
+	for (int count = 0; count < studentVector.size(); count++)
 	{
-		if (student[count].usfID == info)
+		if (studentVector[count].usfID == info)
 		{
 			cout << "We have found the student" << endl;
 			cout << "To change the Name enter 1, if not enter 0: ";
@@ -118,7 +172,7 @@ void updateStudentData(ClassRoll student[100], int limit)
 			{
 				cout << "New name: ";
 				cin >> newname;
-				student[count].name = newname;
+				studentVector[count].name = newname;
 			}
 			cout << "To change the email enter 1, if not enter 0: ";
 			cin >> change2;
@@ -126,7 +180,7 @@ void updateStudentData(ClassRoll student[100], int limit)
 			{
 				cout << "New email: ";
 				cin >> newemail;
-				student[count].usfEmail = newemail;
+				studentVector[count].usfEmail = newemail;
 			}
 			cout << "To change the Student ID enter 1, if not enter 0: ";
 			cin >> change3;
@@ -134,31 +188,34 @@ void updateStudentData(ClassRoll student[100], int limit)
 			{
 				cout << "New ID: ";
 				cin >> newid;
-				student[count].usfID = newid;
+				studentVector[count].usfID = newid;
 			}
-			cout << "To change the Student grade 1 enter 1, if not enter 0: ";
-			cin >> change4;
+			cout << "To change the Student grade 1 enter 1, if not enter 0:
+				";
+				cin >> change4;
 			if (change4 == 1)
 			{
 				cout << "New grade 1: ";
 				cin >> newgrade1;
-				student[count].grade_Essay1 = newgrade1;
+				studentVector[count].grade_Essay1 = newgrade1;
 			}
-			cout << "To change the Student grade 2 enter 1, if not enter 0: ";
-			cin >> change5;
+			cout << "To change the Student grade 2 enter 1, if not enter 0:
+				";
+				cin >> change5;
 			if (change5 == 1)
 			{
 				cout << "New grade 2: ";
 				cin >> newgrade2;
-				student[count].grade_Essay2 = newgrade2;
+				studentVector[count].grade_Essay2 = newgrade2;
 			}
-			cout << "To change the Student grade 1 enter 1, if not enter 0: ";
-			cin >> change6;
+			cout << "To change the Student grade 1 enter 1, if not enter 0:
+				";
+				cin >> change6;
 			if (change6 == 1)
 			{
 				cout << "New term project grade: ";
 				cin >> newgrade3;
-				student[count].grade_termProject = newgrade3;
+				studentVector[count].grade_termProject = newgrade3;
 			}
 
 		}
@@ -166,75 +223,89 @@ void updateStudentData(ClassRoll student[100], int limit)
 }
 
 // Adding a student
-void addStudent(ClassRoll student[], int &limit)
+void addStudent(vector<ClassRoll> & studentVector, int limit)
 {
+	//studentVector.reserve(100);
+	ClassRoll stud;
 	string name;
 	cout << "Full Name: ";
 	cin.ignore();
 	getline(cin, name);
 	if (name.length() > 40)
 	{
-		cerr << "Error: The name you entered must not exceed 40 characters!" << endl;
+		cerr << "Error: The name you entered must not exceed 40
+			characters!" << endl;
 			cout << endl;
 		return;
 	}
-	student[a].name = name;
+	stud.name = name;
 
 	string usfID;
 	cout << "USF ID: ";
 	cin >> usfID;
 	if (usfID.length() > 10)
 	{
-		cerr << "Error: Your USF ID number must not exceed 10 characters!" << endl;
+		cerr << "Error: Your USF ID number must not exceed 10 characters!"
+			<< endl;
 		cout << endl;
 		return;
 	}
-	student[a].usfID = usfID;
+	stud.usfID = usfID;
 
 	string email;
 	cout << "Email: ";
 	cin >> email;
 	if (email.length() > 40)
 	{
-		cerr << "Error: Your email addrress must not exceed 40 characters!" << endl;
+		cerr << "Error: Your email addrress must not exceed 40 characters!"
+			<< endl;
 		cout << endl;
 		return;
 	}
-	student[a].usfEmail = email;
+	stud.usfEmail = email;
 
-	int grade_Essay1;
+	string grade_Essay1;
 	cout << "Essay1 Grade (0 to 4):";
 	cin >> grade_Essay1;
-	if (grade_Essay1 < 0 || grade_Essay1 > 4)
+	if (grade_Essay1 != "0" && grade_Essay1 != "4" && grade_Essay1 != "3"
+		&& grade_Essay1 != "2" && grade_Essay1 != "1")
 	{
 		cerr << "Error: Essay 1 grade not in the range of 0 to 4!" << endl;
 		cout << endl;
 		return;
 	}
-	student[a].grade_Essay1 = grade_Essay1;
+	stud.grade_Essay1 = grade_Essay1;
 
-	int grade_Essay2;
+	string grade_Essay2;
 	cout << "Essay2 Grade (0 to 4):";
 	cin >> grade_Essay2;
-	if (grade_Essay2 < 0 || grade_Essay2 > 4)
+	if (grade_Essay2 != "0" && grade_Essay2 != "4" && grade_Essay2 != "3"
+		&& grade_Essay2 != "2" && grade_Essay2 != "1")
 	{
 		cerr << "Error: Essay 2 grade not in the range of 0 to 4!" << endl;
 		cout << endl;
 		return;
 	}
-	student[a].grade_Essay2 = grade_Essay2;
+	stud.grade_Essay2 = grade_Essay2;
 
-	int grade_termProject;
+	string grade_termProject;
 	cout << "Term Project Grade (0 to 4):";
 	cin >> grade_termProject;
-	if (grade_termProject < 0 || grade_termProject > 4)
+	if (grade_termProject != "0" && grade_termProject != "4" &&
+		grade_termProject != "3" && grade_termProject != "2" && grade_termProject
+		!= "1")
 	{
 		cerr << "Term project grade not in the range of 0 to 4!" << endl;
 		cout << endl;
 		return;
 	}
-	student[a].grade_termProject = grade_termProject;
-	a++;
+	stud.grade_termProject = grade_termProject;
+	cout << studentVector.size();
+	studentVector.push_back(stud);
+	cout << "did this";
+	cout << studentVector.size();
+	cout << studentVector[0].name;
+
 }
 
 void deleteStudent(ClassRoll student[100], int limit)
@@ -252,34 +323,63 @@ void deleteStudent(ClassRoll student[100], int limit)
 			student[count].name = garbage;
 			student[count].usfID = garbage;
 			student[count].usfEmail = garbage;
-			student[count].grade_Essay1 = 0;
-			student[count].grade_Essay2 = 0;
-			student[count].grade_termProject = 0;
+			student[count].grade_Essay1 = "0";
+			student[count].grade_Essay2 = "0";
+			student[count].grade_termProject = "0";
 		}
 	}
 }
 
-void saveStudentData(ClassRoll students[], int limit)
+void saveStudentData(vector<ClassRoll> & studentVector, int limit)
 {
 	ofstream myfile;
 	myfile.open("StudentRecord.txt", ios::ios_base::app);
 
-	for (int x = 0; x <= a; x++)
+	cout << studentVector.size();
+	cout << studentVector[0].name;
+	cout << "____";
+
+	for (int x = 0; x < studentVector.size(); x++)
 	{
-		if (students[x].grade_Essay1 > 4 || students[x].grade_Essay1 < 0) {
-			break;
-		}
-		myfile << students[x].name << " " << students[x].usfID << " " <<
-			students[x].usfEmail << " "
-			<< students[x].grade_Essay1 << " " << students[x].grade_Essay2
-			<< " "
-			<< students[x].grade_termProject << endl;
+
+
+		myfile << studentVector[x].name << "," << studentVector[x].usfID <<
+			"," <<
+			studentVector[x].usfEmail << ","
+			<< studentVector[x].grade_Essay1 << "," <<
+			studentVector[x].grade_Essay2
+			<< ","
+			<< studentVector[x].grade_termProject << endl;
 	}
 	myfile.close();
 
 }
 
-void displayMenu(ClassRoll student[100])
+void saveStudentData2(vector<ClassRoll> & studentVector, int limit)
+{
+	ofstream myfile;
+	myfile.open("StudentRecord.txt", ios::ios_base::out);
+
+	cout << studentVector.size();
+	cout << studentVector[0].name;
+	cout << "____";
+
+	for (int x = 0; x < studentVector.size(); x++)
+	{
+
+		myfile << studentVector[x].name << "," << studentVector[x].usfID <<
+			"," <<
+			studentVector[x].usfEmail << ","
+			<< studentVector[x].grade_Essay1 << "," <<
+			studentVector[x].grade_Essay2
+			<< ","
+			<< studentVector[x].grade_termProject << endl;
+	}
+	myfile.close();
+
+}
+
+void displayMenu(vector<ClassRoll> studentVector)
 {
 	int userOption;
 
@@ -290,28 +390,32 @@ void displayMenu(ClassRoll student[100])
 	cout << "(3): Retrieve a students data." << endl;
 	cout << "(4): Update Students data." << endl;
 	cout << "(5): Exit program." << endl;
+	//cout << "(6): Save changes." << endl;
 	cin >> userOption;
 
 	switch (userOption)
 	{
 	case 1:
-		addStudent(student, limit);
-		saveStudentData(student, limit);
+		addStudent(studentVector, limit);
+		//cout << studentVector.size();
+		saveStudentData(studentVector, limit);
 		break;
 	case 2:
-		deleteStudent(student, limit);
-		saveStudentData(student, limit);
+		//deleteStudent(student, limit);
+		//saveStudentData(student, limit);
 		break;
 	case 3:
-		getRecord(student, limit);
+		getRecord(studentVector, limit);
 		break;
 	case 4:
-		updateStudentData(student, limit);
-		saveStudentData(student, limit);
+		updateStudentData(studentVector, limit);
+		saveStudentData2(studentVector, limit);
 		break;
 	case 5:
 		exit(0);
 		break;
+		//case 6:
+		//saveStudentData2(studentVector, limit);
 	default:
 		cerr << "Error: you did not enter a correct choice!!" << endl;
 		break;
@@ -324,6 +428,9 @@ int main(int argc, char **argv)
 {
 	char okToExit;
 	ClassRoll studentData[100];
+	vector<ClassRoll> studentVector;
+
+	readStudentData(studentVector, limit);
 
 	cout << "***********************************" << endl;
 	cout << "***Class-roll Maintenance System***" << endl;
@@ -332,12 +439,12 @@ int main(int argc, char **argv)
 
 	do
 	{
-		displayMenu(studentData);
-		cout << "To continue press Y, otherwise press any key to exit: " << endl;
+		displayMenu(studentVector);
+		cout << "To continue press Y, otherwise press any key to exit: " <<
+			endl;
 		cin >> okToExit;
 	} while (okToExit == 'Y' || okToExit == 'y');
 
 	getchar();
 	return 0;
 }
-
